@@ -37,4 +37,28 @@ public class HighArray extends BaseArray {
 
     return -1;
   }
+
+  @Override
+  public long max() {
+    if (elementCount == 0) {
+      return -1;
+    }
+
+    long max = elements[0];
+
+    for (int i = 1; i < elementCount; i++) {
+      if (elements[i] > max) max = elements[i];
+    }
+
+    return max;
+  }
+
+  @Override
+  public long removeMax() {
+    long max = max();
+
+    delete(max);
+
+    return max;
+  }
 }

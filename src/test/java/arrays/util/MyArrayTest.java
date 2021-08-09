@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,21 +24,19 @@ public abstract class MyArrayTest<T extends MyArray> {
 
   @Test
   void insert() {
-    array.insert(10);
-    array.insert(15);
+    Stream.of(10, 15, 30).forEach(array::insert);
 
-    assertThat(array.size()).isEqualTo(2);
+    assertThat(array.size()).isEqualTo(3);
     assertThat(array.exists(10)).isTrue();
     assertThat(array.exists(15)).isTrue();
     assertThat(array.exists(20)).isFalse();
 
-    assertThat(array.display()).isEqualTo("[10, 15]");
+    assertThat(array.display()).isEqualTo("[10, 15, 30]");
   }
 
   @Test
   void delete() {
-    array.insert(10);
-    array.insert(15);
+    Stream.of(10, 15).forEach(array::insert);
 
     assertThat(array.exists(10)).isTrue();
 
@@ -69,12 +68,7 @@ public abstract class MyArrayTest<T extends MyArray> {
 
   @Test
   void multiDelete() {
-    array.insert(10);
-    array.insert(15);
-    array.insert(20);
-    array.insert(30);
-    array.insert(20);
-    array.insert(30);
+    Stream.of(10, 15, 20, 30, 20, 30).forEach(array::insert);
 
     assertThat(array.exists(30)).isTrue();
 
@@ -120,5 +114,30 @@ public abstract class MyArrayTest<T extends MyArray> {
     assertThat(array.index(15)).isEqualTo(15);
     assertThat(array.index(99)).isEqualTo(99);
     assertThat(array.index(200)).isEqualTo(-1);
+  }
+
+  @Test
+  void max() {
+    Stream.of(10, 20, 30, 40).forEach(array::insert);
+
+    assertThat(array.max()).isEqualTo(40);
+  }
+
+  @Test
+  void emptyMax() {
+    assertThat(array.max()).isEqualTo(-1);
+  }
+
+  @Test
+  void removeMax() {
+    Stream.of(10, 20, 30, 40).forEach(array::insert);
+
+    assertThat(array.removeMax()).isEqualTo(40);
+    assertThat(array.exists(40)).isFalse();
+  }
+
+  @Test
+  void emptyRemoveMax() {
+    assertThat(array.removeMax()).isEqualTo(-1);
   }
 }

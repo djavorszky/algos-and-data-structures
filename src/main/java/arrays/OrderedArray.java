@@ -7,38 +7,12 @@ public class OrderedArray extends BaseArray {
 
   @Override
   public int index(long key) {
-    int lowerBound = 0;
-    int upperBound = elementCount - 1;
-    int currentIndex;
-
-    while (true) {
-      currentIndex = (lowerBound + upperBound) / 2;
-
-      if (elements[currentIndex] == key) {
-        return currentIndex;
-      }
-
-      if (lowerBound > upperBound) {
-        return -1;
-      }
-
-      if (elements[currentIndex] < key) {
-        lowerBound = currentIndex + 1;
-      } else {
-        upperBound = currentIndex - 1;
-      }
-    }
+    return getElementLocation(key, true);
   }
 
   @Override
   public void insert(long value) {
-    int insertIndex = -1;
-    for (int i = 0; i < elementCount; i++) {
-      if (elements[i] > value) {
-        insertIndex = i;
-        break;
-      }
-    }
+    int insertIndex = getElementLocation(value, false);
 
     if (insertIndex == -1) {
       elements[elementCount] = value;
@@ -46,9 +20,7 @@ public class OrderedArray extends BaseArray {
       return;
     }
 
-    for (int i = insertIndex; i < elementCount; i++) {
-      elements[i + 1] = elements[i];
-    }
+    System.arraycopy(elements, insertIndex, elements, insertIndex + 1, elementCount - insertIndex);
 
     elements[insertIndex] = value;
     elementCount++;
@@ -58,14 +30,67 @@ public class OrderedArray extends BaseArray {
   public boolean delete(long value) {
     boolean deleted = false;
 
-    for (int i = 0; i <= elementCount; i++) {
-      if (elements[i] == value) {
-        elements[i] = elements[i + 1];
-        deleted = true;
-        elementCount--;
-      }
+    int index;
+    while ((index = index(value)) != -1) {
+      deleted = true;
+
+      if (elementCount + 1 - index >= 0)
+        System.arraycopy(elements, index + 1, elements, index, elementCount + 1 - index);
+
+      elementCount--;
     }
 
     return deleted;
+  }
+
+  @Override
+  public long max() {
+    if (elementCount == 0) {
+      return -1;
+    }
+    return this.elements[elementCount - 1];
+  }
+
+  @Override
+  public long removeMax() {
+    if (elementCount == 0) {
+      return -1;
+    }
+
+    return this.elements[--elementCount];
+  }
+
+  private int getElementLocation(long element, boolean exactMatch) {
+    int lowerBound = 0;
+    int upperBound = elementCount - 1;
+    int currentIndex;
+
+    while (true) {
+      currentIndex = (upperBound + lowerBound) / 2;
+
+      long elementAtIndex = elements[currentIndex];
+
+      if (elementAtIndex == element) {
+        return currentIndex;
+      }
+
+      if (lowerBound > upperBound || currentIndex == 0) {
+        return -1;
+      }
+
+      if (elementAtIndex > element) {
+        if (!exactMatch && elements[currentIndex + 1] < elementAtIndex) {
+          return currentIndex - 1;
+        }
+
+        upperBound = currentIndex - 1;
+      } else {
+        if (!exactMatch && elements[currentIndex - 1] > elementAtIndex) {
+          return currentIndex;
+        }
+
+        lowerBound = currentIndex + 1;
+      }
+    }
   }
 }

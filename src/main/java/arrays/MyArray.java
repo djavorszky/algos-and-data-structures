@@ -15,4 +15,8 @@ public interface MyArray {
   void clear();
 
   int index(long searchKey);
+
+  long max();
+
+  long removeMax();
 }

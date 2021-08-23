@@ -2,6 +2,8 @@ package arrays;
 
 public interface MyArray {
 
+  long elementAt(int index);
+
   boolean exists(long searchKey);
 
   void insert(long value);

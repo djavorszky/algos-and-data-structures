@@ -10,6 +10,15 @@ public abstract class BaseArray implements MyArray {
   }
 
   @Override
+  public long elementAt(int index) {
+    if (index < 0 || elementCount == 0 || index > elementCount) {
+      return -1;
+    }
+
+    return elements[index];
+  }
+
+  @Override
   public String display() {
     if (elementCount == 0) {
       return "[]";

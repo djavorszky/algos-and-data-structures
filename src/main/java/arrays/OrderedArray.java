@@ -60,6 +60,36 @@ public class OrderedArray extends BaseArray {
     return this.elements[--elementCount];
   }
 
+  public OrderedArray merge(OrderedArray other) {
+    int thisCounter = 0;
+    int otherCounter = 0;
+    int thisSize = size();
+    int otherSize = other.size();
+
+    OrderedArray mergedArray = new OrderedArray(100);
+
+    while (thisCounter < thisSize || otherCounter < otherSize) {
+      long thisNumber = elementAt(thisCounter);
+      long otherNumber = other.elementAt(otherCounter);
+
+      if (thisCounter >= thisSize) {
+        otherCounter++;
+        mergedArray.insert(otherNumber);
+      } else if (otherCounter >= otherSize) {
+        thisCounter++;
+        mergedArray.insert(thisNumber);
+      } else if (thisNumber < otherNumber) {
+        thisCounter++;
+        mergedArray.insert(thisNumber);
+      } else {
+        otherCounter++;
+        mergedArray.insert(otherNumber);
+      }
+    }
+
+    return mergedArray;
+  }
+
   private int getElementLocation(long element, boolean exactMatch) {
     int lowerBound = 0;
     int upperBound = elementCount - 1;

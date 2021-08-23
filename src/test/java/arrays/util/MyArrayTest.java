@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class MyArrayTest<T extends MyArray> {
 
-  private final T array;
+  protected final T array;
 
   public MyArrayTest(T array) {
     this.array = array;
@@ -20,6 +20,21 @@ public abstract class MyArrayTest<T extends MyArray> {
   @BeforeEach
   void setup() {
     array.clear();
+  }
+
+  @Test
+  void elementAt() {
+    assertThat(array.elementAt(0)).isEqualTo(-1);
+
+    Stream.of(10, 15, 30).forEach(array::insert);
+
+    assertThat(array.elementAt(-1)).isEqualTo(-1);
+    assertThat(array.elementAt(0)).isEqualTo(10);
+    assertThat(array.elementAt(1)).isEqualTo(15);
+    assertThat(array.elementAt(2)).isEqualTo(30);
+
+    assertThat(array.elementAt(30)).isEqualTo(-1);
+    assertThat(array.elementAt(150)).isEqualTo(-1);
   }
 
   @Test
